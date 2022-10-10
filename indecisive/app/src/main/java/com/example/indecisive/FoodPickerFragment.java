@@ -2,8 +2,14 @@ package com.example.indecisive;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +22,19 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+
 
 public class FoodPickerFragment extends Fragment {
 
@@ -62,18 +73,54 @@ public class FoodPickerFragment extends Fragment {
                 (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            searchForFood();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+
+
+
+
         }
+
+
     }
 
-    public void searchForFood() throws IOException {
-        OkHttpClient client = new OkHttpClient().newBuilder()
-                .build();
-        MediaType mediaType = MediaType.parse("text/plain");
-        RequestBody body = RequestBody.create(mediaType, "");
-        Request request = new Request.Builder()
-                .url("https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522%2C151.1957362&radius=1500&type=restaurant&keyword=cruise&key=AIzaSyDln1uHXQm5lIEwR-ElwShFQ0F2WSNyxzM")
-                .method("GET", body)
-                .build();
-        Response response = client.newCall(request).execute();
+    public JsonObject searchForFood() throws IOException {
+        /* Get current location*/
+        try {
+            if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        //Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlacesUrl.append("&location=" + "35.4817435" + "%2C" + "-86.0886007");
+        //googlePlacesUrl.append("&location=-33.8670522%2C151.1957362");
+        googlePlacesUrl.append("&radius=" + "50000");
+        googlePlacesUrl.append("&types=" + "restaurant");
+        googlePlacesUrl.append("&name=mcdonalds");
+        googlePlacesUrl.append("&key=" + "AIzaSyDln1uHXQm5lIEwR-ElwShFQ0F2WSNyxzM");
+
+
+        URL url = new URL(googlePlacesUrl.toString());
+        URLConnection urlconn = url.openConnection();
+        BufferedReader in = new BufferedReader(new InputStreamReader(urlconn.getInputStream()));
+
+        String inputstring;
+        JsonObject arr = JsonParser.parseReader(in).getAsJsonObject();
+
+        return arr;
+
     }
 }

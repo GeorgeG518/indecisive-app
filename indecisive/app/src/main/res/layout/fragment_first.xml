@@ -33,4 +33,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/food_picker" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="210dp"
+        android:layout_height="246dp"
+        android:src="@android:drawable/btn_star_big_on"
+        tools:layout_editor_absoluteX="100dp"
+        tools:layout_editor_absoluteY="181dp"
+        app:layout_constraintTop_toBottomOf="@id/dice_roller"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

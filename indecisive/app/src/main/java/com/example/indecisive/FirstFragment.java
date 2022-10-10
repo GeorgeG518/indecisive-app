@@ -41,6 +41,12 @@ public class FirstFragment extends Fragment {
                 NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.home_to_foodpicker);
             }
         });
+        binding.imageView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.home_to_foodpicker);
+            }
+        });
     }
 
     @Override
