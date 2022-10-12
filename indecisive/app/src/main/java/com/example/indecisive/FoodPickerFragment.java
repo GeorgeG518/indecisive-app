@@ -63,6 +63,7 @@ public class FoodPickerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         return inflater.inflate(R.layout.fragment_food_picker, container, false);
     }
 
@@ -107,9 +108,9 @@ public class FoodPickerFragment extends Fragment {
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlacesUrl.append("&location=" + "35.4817435" + "%2C" + "-86.0886007");
         //googlePlacesUrl.append("&location=-33.8670522%2C151.1957362");
-        googlePlacesUrl.append("&radius=" + "50000");
+        googlePlacesUrl.append("&radius=" + "30000");
         googlePlacesUrl.append("&types=" + "restaurant");
-        googlePlacesUrl.append("&name=mcdonalds");
+        googlePlacesUrl.append("&name="+getArguments().getString("keyword"));
         googlePlacesUrl.append("&key=" + "AIzaSyDln1uHXQm5lIEwR-ElwShFQ0F2WSNyxzM");
 
 

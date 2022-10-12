@@ -26,6 +26,15 @@ public class FoodPickerInputFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        binding.findFoodButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Bundle bundle = new Bundle();
+                bundle.putString("keyword", String.valueOf(binding.keywordInput.getEditText().getText()));
+                NavHostFragment.findNavController(FoodPickerInputFragment.this).navigate(R.id.action_food_picker_input_to_food_picker, bundle);
+            }
+        }
 
+        );
     }
 }
