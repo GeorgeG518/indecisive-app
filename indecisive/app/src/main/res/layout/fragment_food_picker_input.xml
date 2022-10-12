@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/food_picker_input"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/keyword_input"
+        android:layout_width="match_parent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:textColorHint="@color/black"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:hint="Keyword"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:inputType="text"
+            android:singleLine="true"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:id="@+id/radius_label"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/keyword_input"
+        android:text="Radius"
+        android:textStyle="bold"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"/>
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:max="50"
+        android:progress="2"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/radius_label"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+         />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/magic_input"
+        android:layout_width="match_parent"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:textColorHint="@color/black"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/seekBar"
+        android:hint="Magic Number"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="150dp"
+        android:layout_marginLeft="10dp"
+
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        ><com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:inputType="number"
+            android:singleLine="true"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/find_food_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Find Food"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="16dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/magic_input" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

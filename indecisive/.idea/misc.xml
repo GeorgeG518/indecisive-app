@@ -3,13 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/Owner/AndroidStudioProjects/indecisive-app/indecisive/app/src/main/res/layout/fragment_first.xml" value="0.268" />
-        <entry key="..\:/Users/Owner/AndroidStudioProjects/indecisive-app/indecisive/app/src/main/res/layout/fragment_food_picker.xml" value="0.268" />
-        <entry key="..\:/Users/Owner/AndroidStudioProjects/indecisive-app/indecisive/app/src/main/res/layout/fragment_second.xml" value="0.259375" />
         <entry key="..\:/Users/Quack/AndroidStudioProjects/indecisive/app/src/main/res/layout/activity_main.xml" value="0.2936708860759494" />
         <entry key="..\:/Users/Quack/AndroidStudioProjects/indecisive/app/src/main/res/layout/content_main.xml" value="0.35688405797101447" />
         <entry key="..\:/Users/Quack/AndroidStudioProjects/indecisive/app/src/main/res/layout/fragment_first.xml" value="0.365625" />
         <entry key="..\:/Users/Quack/AndroidStudioProjects/indecisive/app/src/main/res/layout/fragment_food_picker.xml" value="0.18697916666666667" />
+        <entry key="..\:/Users/Quack/AndroidStudioProjects/indecisive/app/src/main/res/layout/fragment_food_picker_input.xml" value="0.2713541666666667" />
       </map>
     </option>
   </component>
@@ -18,12 +16,5 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
-  </component>
-  <component name="VisualizationToolProject">
-    <option name="state">
-      <ProjectState>
-        <option name="scale" value="0.1" />
-      </ProjectState>
-    </option>
   </component>
 </project>

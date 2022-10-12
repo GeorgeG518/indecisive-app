@@ -11,4 +11,6 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="food_picker">Food Picker</string>
     <string name="dice_roller">Dice Roller</string>
+    <string name="food_picker_input" />
+    <!-- TODO: Remove or change this placeholder text -->
 </resources>

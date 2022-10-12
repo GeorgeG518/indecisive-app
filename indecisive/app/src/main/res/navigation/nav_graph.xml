@@ -6,6 +6,15 @@
     app:startDestination="@id/FirstFragment">
 
     <fragment
+        android:id="@+id/food_picker_input"
+        android:name="com.example.indecisive.FoodPickerInputFragment"
+        android:label="@string/food_picker_input"
+        tools:layout="@layout/fragment_food_picker_input">
+        <action
+            android:id="@+id/action_food_picker_input_to_food_picker"
+            app:destination="@id/food_picker" />
+    </fragment>
+    <fragment
         android:id="@+id/food_picker"
         android:name="com.example.indecisive.FoodPickerFragment"
         android:label="@string/food_picker"
@@ -23,7 +32,7 @@
             app:destination="@id/diceroller" />
         <action
             android:id="@+id/home_to_foodpicker"
-            app:destination="@id/food_picker" />
+            app:destination="@id/food_picker_input" />
     </fragment>
     <fragment
         android:id="@+id/diceroller"
