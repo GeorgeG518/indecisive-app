@@ -6,66 +6,57 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.indecisive.databinding.FragmentFoodPickerBinding;
+import com.example.indecisive.databinding.FragmentFoodPickerInputBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
 import java.io.IOException;
+import java.util.Random;
 
 
 public class FoodPickerFragment extends Fragment {
-
+    private FragmentFoodPickerBinding binding;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
-
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * In this case, we just add a marker near Sydney, Australia.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
-        @Override
-        public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        }
-    };
     private JsonObject restaurants;
+
+    private double width = Resources.getSystem().getDisplayMetrics().widthPixels;
+    private double height;
+    Random randGenerator;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_food_picker, container, false);
+        binding = FragmentFoodPickerBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        if (mapFragment != null) {
-            mapFragment.getMapAsync(callback);
+        Integer seed = getArguments().getInt("magicNumber");
+
+        if(seed==518200){
+            randGenerator = new Random();
+        }else {
+            randGenerator = new Random(seed);
         }
         try {
             searchForFood();
@@ -107,6 +98,14 @@ public class FoodPickerFragment extends Fragment {
         //JsonObject arr = JsonParser.parseReader(in).getAsJsonObject();
 
     }
+
+    private JsonElement getRestaurant(){
+
+        JsonArray restArr = restaurants.getAsJsonArray("results");
+        JsonElement temp= restArr.get(randGenerator.nextInt(restArr.size()));
+        return temp;
+    }
+
     public class GoogleAsyncTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
@@ -122,9 +121,42 @@ public class FoodPickerFragment extends Fragment {
             return tobeparsed;
         }
 
+
         @Override
         protected void onPostExecute(String result) {
             restaurants = (JsonObject) JsonParser.parseString(result);
+            System.out.println(restaurants.toString());
+            JsonObject chosenRestaurant = getRestaurant().getAsJsonObject();
+            binding.restaurantName.setText(chosenRestaurant.get("name").toString());
+            StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/photo?");
+            googlePlacesUrl.append("&maxwidth=" + (int) width);
+            googlePlacesUrl.append("&photo_reference=" +chosenRestaurant.getAsJsonArray("photos").get(0).getAsJsonObject().get("photo_reference").toString().replaceAll("\"",""));
+            googlePlacesUrl.append("&key=" + "AIzaSyDln1uHXQm5lIEwR-ElwShFQ0F2WSNyxzM");
+
+            new GooglePictureAsyncTask().execute(googlePlacesUrl.toString());
+        }
+    }
+
+    public class GooglePictureAsyncTask extends AsyncTask<String, Void, Bitmap>{
+
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            Networker getter = new Networker();
+            Bitmap tobeparsed;
+            try {
+                System.out.println(strings[0].toString());
+                tobeparsed = getter.getBitmap(strings[0].toString());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+            return tobeparsed;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            binding.photo.setImageBitmap(result);
         }
     }
 }

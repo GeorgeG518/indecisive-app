@@ -23,6 +23,10 @@
             android:name="keyword"
             app:argType="string"
             android:defaultValue="restaurants" />
+        <argument
+            android:name="magicNumber"
+            app:argType="integer"
+            android:defaultValue="5182000" />
     </fragment>
 
     <fragment

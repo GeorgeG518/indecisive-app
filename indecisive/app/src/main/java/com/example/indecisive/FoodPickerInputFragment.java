@@ -31,6 +31,11 @@ public class FoodPickerInputFragment extends Fragment {
             public void onClick(View view){
                 Bundle bundle = new Bundle();
                 bundle.putString("keyword", String.valueOf(binding.keywordInput.getEditText().getText()));
+                try {
+                    bundle.putInt("magicNumber", Integer.parseInt(String.valueOf(binding.magicInput.getEditText().getText())));
+                }catch (NumberFormatException e){
+                    bundle.putInt("magicNumber", 5182000);
+                }
                 NavHostFragment.findNavController(FoodPickerInputFragment.this).navigate(R.id.action_food_picker_input_to_food_picker, bundle);
             }
         }
