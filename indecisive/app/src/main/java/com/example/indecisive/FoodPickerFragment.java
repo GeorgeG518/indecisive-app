@@ -5,6 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import android.app.Activity;
 import android.content.Context;
@@ -28,17 +32,25 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
 public class FoodPickerFragment extends Fragment {
     private FragmentFoodPickerBinding binding;
     private FusedLocationProviderClient fusedLocationProviderClient;
-    private JsonObject restaurants;
+    private RecyclerView mRecyclerView;
+    private LinearLayoutManager HorizontalLay;
 
+    private JsonObject restaurants;
+    private List<Bitmap> bitmapList;
+
+    private FoodPickerAdapter adapter;
     private double width = Resources.getSystem().getDisplayMetrics().widthPixels;
     private double height;
     Random randGenerator;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -52,6 +64,18 @@ public class FoodPickerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Integer seed = getArguments().getInt("magicNumber");
+
+        // recyclin view junk
+        mRecyclerView =(RecyclerView) getActivity().findViewById(R.id.food_picker_recycler);
+
+
+        bitmapList = new ArrayList<>();
+        adapter = new FoodPickerAdapter(bitmapList);
+        HorizontalLay = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        mRecyclerView.setLayoutManager(HorizontalLay);
+        mRecyclerView.setAdapter(adapter);
+        SnapHelper helper = new LinearSnapHelper();
+        helper.attachToRecyclerView(mRecyclerView);
 
         if(seed==518200){
             randGenerator = new Random();
@@ -106,6 +130,7 @@ public class FoodPickerFragment extends Fragment {
         return temp;
     }
 
+
     public class GoogleAsyncTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... strings) {
@@ -128,24 +153,61 @@ public class FoodPickerFragment extends Fragment {
             System.out.println(restaurants.toString());
             JsonObject chosenRestaurant = getRestaurant().getAsJsonObject();
             binding.restaurantName.setText(chosenRestaurant.get("name").toString());
-            StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/photo?");
-            googlePlacesUrl.append("&maxwidth=" + (int) width);
-            googlePlacesUrl.append("&photo_reference=" +chosenRestaurant.getAsJsonArray("photos").get(0).getAsJsonObject().get("photo_reference").toString().replaceAll("\"",""));
+            String place_id = chosenRestaurant.get("place_id").toString();
+            StringBuilder googlePlacesUrl=new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");;
+            googlePlacesUrl.append("place_id="+place_id.replaceAll("\"", ""));
+            googlePlacesUrl.append("&fields=photo");
             googlePlacesUrl.append("&key=" + "AIzaSyDln1uHXQm5lIEwR-ElwShFQ0F2WSNyxzM");
+            new GoogleGetPicturesTask().execute(googlePlacesUrl.toString());
 
-            new GooglePictureAsyncTask().execute(googlePlacesUrl.toString());
         }
     }
 
-    public class GooglePictureAsyncTask extends AsyncTask<String, Void, Bitmap>{
+    public class GoogleGetPicturesTask extends AsyncTask<String, Void, String>{
+        @Override
+        protected String doInBackground(String... strings) {
+            Networker getter = new Networker();
+            String tobeparsed;
+            try {
+                tobeparsed = getter.get(strings[0].toString());
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+            return tobeparsed;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            JsonObject photoArr = (JsonObject) JsonParser.parseString(result);
+            List<String> stringList = new ArrayList<>();
+            for(int i = 0 ; i<3; i++) {
+                try{
+                    StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/photo?");
+                    googlePlacesUrl.append("&maxwidth=" + (int) width);
+                    googlePlacesUrl.append("&photo_reference=" + photoArr.getAsJsonObject("result").getAsJsonArray("photos").get(i).getAsJsonObject().get("photo_reference").toString().replaceAll("\"", ""));
+                    googlePlacesUrl.append("&key=" + "AIzaSyDln1uHXQm5lIEwR-ElwShFQ0F2WSNyxzM");
+                    stringList.add(googlePlacesUrl.toString());
+                }catch(IndexOutOfBoundsException e){
+                    continue;
+                }
+            }
+
+            new GooglePictureAsyncTask().execute(stringList);
+
+        }
+    }
+    public class GooglePictureAsyncTask extends AsyncTask<List<String>, Void, List<Bitmap> >{
 
         @Override
-        protected Bitmap doInBackground(String... strings) {
+        protected List<Bitmap> doInBackground(List<String>... strings) {
             Networker getter = new Networker();
-            Bitmap tobeparsed;
+            List<Bitmap> tobeparsed = new ArrayList<>();
             try {
-                System.out.println(strings[0].toString());
-                tobeparsed = getter.getBitmap(strings[0].toString());
+                for(String i : strings[0]) {
+                    System.out.println(i);
+                    tobeparsed.add(getter.getBitmap(i));
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -155,8 +217,11 @@ public class FoodPickerFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(Bitmap result) {
-            binding.photo.setImageBitmap(result);
+        protected void onPostExecute(List<Bitmap> result) {
+            adapter = new FoodPickerAdapter(result);
+            mRecyclerView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+            System.out.println(result);
         }
     }
 }

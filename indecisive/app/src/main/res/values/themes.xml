@@ -20,6 +20,9 @@
     </style>
 
     <style name="Theme.Indecisive.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
+    <style name="roundedCornersImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">40dp</item>
+    </style>
     <style name="Theme.Indecisive.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
