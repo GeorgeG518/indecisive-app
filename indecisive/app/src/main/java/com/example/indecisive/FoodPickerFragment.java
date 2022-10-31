@@ -1,5 +1,7 @@
 package com.example.indecisive;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -10,23 +12,22 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
-import android.app.Activity;
-import android.content.Context;
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.location.LocationManager;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.indecisive.databinding.FragmentFoodPickerBinding;
-import com.example.indecisive.databinding.FragmentFoodPickerInputBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -49,6 +50,7 @@ public class FoodPickerFragment extends Fragment {
     private FoodPickerAdapter adapter;
     private double width = Resources.getSystem().getDisplayMetrics().widthPixels;
     private double height;
+
     Random randGenerator;
 
     @Nullable
@@ -60,7 +62,25 @@ public class FoodPickerFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    try {
+                        searchForFood();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    // Explain to the user that the feature is unavailable because the
+                    // feature requires a permission that the user has denied. At the
+                    // same time, respect the user's decision. Don't link to system
+                    // settings in an effort to convince the user to change their
+                    // decision.
+                }
+            });
+
     @Override
+    @SuppressLint("MissingPermission")
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Integer seed = getArguments().getInt("magicNumber");
@@ -86,23 +106,41 @@ public class FoodPickerFragment extends Fragment {
             searchForFood();
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }/*
+            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    Location location = task.getResult();
+                    if (location == null) {
+                        //TODO;
+                    } else {
+                        try {
+                            System.out.println(location.getLatitude() + " "+location.getLongitude());
+                            searchForFood();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });*/
+
+
+
+    }
+    public void requestPermissions(){
+        requestPermissionLauncher.launch(
+                Manifest.permission.ACCESS_FINE_LOCATION);
+    }
+
+    public boolean getPermissions(){
+        return (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
 
     }
 
     public void searchForFood() throws IOException {
         /* Get current location*/
-        try {
-            if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        //Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlacesUrl.append("&location=" + "35.84897592819507" + "%2C" + "-86.36885554204993");
 
@@ -112,14 +150,8 @@ public class FoodPickerFragment extends Fragment {
         googlePlacesUrl.append("&name="+getArguments().getString("keyword"));
         googlePlacesUrl.append("&key=" + "AIzaSyDln1uHXQm5lIEwR-ElwShFQ0F2WSNyxzM");
 
-/*
-        URL url = new URL(googlePlacesUrl.toString());
-        HttpURLConnection urlconn = (HttpURLConnection) url.openConnection();
-        BufferedReader in = new BufferedReader(new InputStreamReader(urlconn.getInputStream()));
-*/
         new GoogleAsyncTask().execute(googlePlacesUrl.toString());
 
-        //JsonObject arr = JsonParser.parseReader(in).getAsJsonObject();
 
     }
 
