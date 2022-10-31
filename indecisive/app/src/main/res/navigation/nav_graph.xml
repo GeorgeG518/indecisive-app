@@ -22,8 +22,20 @@
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/diceroller" />
         <action
-            android:id="@+id/home_to_foodpicker"
+            android:id="@+id/action_FirstFragment_to_food_picker"
             app:destination="@id/food_picker" />
+        <action
+            android:id="@+id/action_FirstFragment_to_moreOptions2"
+            app:destination="@id/moreOptions2" />
+        <action
+            android:id="@+id/action_FirstFragment_to_userinput"
+            app:destination="@id/userinput" />
+        <action
+            android:id="@+id/action_FirstFragment_to_magicBall"
+            app:destination="@id/magicBall" />
+        <action
+            android:id="@+id/action_FirstFragment_to_actualdiceroller"
+            app:destination="@id/actualdiceroller" />
     </fragment>
     <fragment
         android:id="@+id/diceroller"
@@ -33,6 +45,42 @@
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/moreOptions2"
+        android:name="com.example.indecisive.moreOptions"
+        android:label="@string/fragment_more_options"
+        tools:layout="@layout/fragment_more_options" >
+        <action
+            android:id="@+id/action_moreOptions2_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userinput"
+        android:name="com.example.indecisive.userinput"
+        android:label="@string/fragment_userinput"
+        tools:layout="@layout/fragment_userinput" >
+        <action
+            android:id="@+id/action_userinput_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/magicBall"
+        android:name="com.example.indecisive.magicBall"
+        android:label="@string/fragment_magic_ball"
+        tools:layout="@layout/fragment_magic_ball" >
+        <action
+            android:id="@+id/action_magicBall_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/actualdiceroller"
+        android:name="com.example.indecisive.actualdiceroller"
+        android:label="@string/fragment_actualdiceroller"
+        tools:layout="@layout/fragment_actualdiceroller" >
+        <action
+            android:id="@+id/action_actualdiceroller_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
 </navigation>

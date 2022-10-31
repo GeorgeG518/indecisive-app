@@ -28,19 +28,54 @@ public class FirstFragment extends Fragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.diceRoller.setOnClickListener(new View.OnClickListener() {
+
+        binding.foodpickerapple.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) {
+            public void onClick(View view){
+                NavHostFragment.findNavController(FirstFragment.this)
+                        .navigate(R.id.action_FirstFragment_to_food_picker);
+            }
+        });
+        binding.userinputbutton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                NavHostFragment.findNavController(FirstFragment.this)
+                        .navigate(R.id.action_FirstFragment_to_userinput);
+            }
+        });
+        binding.randomNumber.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
                 NavHostFragment.findNavController(FirstFragment.this)
                         .navigate(R.id.action_FirstFragment_to_SecondFragment);
             }
         });
-        binding.foodPicker.setOnClickListener(new View.OnClickListener(){
+
+        binding.magicballbutton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                NavHostFragment.findNavController(FirstFragment.this).navigate(R.id.home_to_foodpicker);
+                NavHostFragment.findNavController(FirstFragment.this)
+                        .navigate(R.id.action_FirstFragment_to_magicBall);
             }
         });
+
+        binding.diceButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                NavHostFragment.findNavController(FirstFragment.this)
+                        .navigate(R.id.action_FirstFragment_to_actualdiceroller);
+            }
+        });
+
+        binding.moreOptions.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                NavHostFragment.findNavController(FirstFragment.this)
+                        .navigate(R.id.action_FirstFragment_to_moreOptions2);
+            }
+        });
+
+
     }
 
     @Override

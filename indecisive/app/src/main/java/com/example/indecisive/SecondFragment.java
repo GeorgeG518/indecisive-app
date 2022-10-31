@@ -1,9 +1,12 @@
 package com.example.indecisive;
 
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -15,6 +18,23 @@ public class SecondFragment extends Fragment {
 
     private FragmentSecondBinding binding;
 
+    int firstNumber;
+    int secondNumber;
+    int numberAmount;
+
+    Button Submit;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+     //   setContentView(R.layout.fragment_second);
+
+     //  firstNumberInput = (EditText) findViewById(R.id.firstNumberInput);
+      //  secondNumberInput = (EditText) findViewById(R.id.secondNumberInput);
+        //numberAmountInput = (EditText) findViewById(R.id.numberAmountInput);
+
+      //  submitButton = (Button) findViewById(R.id.submitButton);
+        //submitButton.setOnClickListener(new View.OnClickListener()
+ /*
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -43,5 +63,8 @@ public class SecondFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+*/
+
 
 }
