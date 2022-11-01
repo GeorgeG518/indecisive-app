@@ -6,9 +6,11 @@ package com.example.indecisive;
     Responsible for collecting user input before we do a nearby search. It's mostly textboxes so it's not too complicated.
  */
 import android.os.Bundle;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 
 
 import androidx.annotation.NonNull;
@@ -20,7 +22,7 @@ import com.example.indecisive.databinding.FragmentFoodPickerInputBinding;
 
 public class FoodPickerInputFragment extends Fragment {
 
-
+    private double distance = 5; // this in meters
     private FragmentFoodPickerInputBinding binding;
     @Override
     public View onCreateView(
@@ -40,9 +42,26 @@ public class FoodPickerInputFragment extends Fragment {
             public void onClick(View view) {
                 findFood();
             }
-        }
-
+            }
         );
+
+        binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                System.out.println(i);
+                binding.distanceText.setText(Integer.toString(i) + " km");
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
     /*
      Arguably the most important function in the file. Responsible for error checking input and placing

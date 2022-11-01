@@ -90,7 +90,7 @@ public class FoodPickerFragment extends Fragment {
      */
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Integer seed = getArguments().getInt("magicNumber");
+        int seed = getArguments().getInt("magicNumber");
 
         // recyclin view junk.
         // Mostly stuff required to get the pictures in a recycler view.
@@ -103,7 +103,7 @@ public class FoodPickerFragment extends Fragment {
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(mRecyclerView);
 
-        if(seed==518200){
+        if(seed == 5182000){
             randGenerator = new Random();
         }else {
             randGenerator = new Random(seed);
