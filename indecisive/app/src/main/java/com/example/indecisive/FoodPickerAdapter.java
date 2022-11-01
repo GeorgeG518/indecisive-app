@@ -1,5 +1,11 @@
 package com.example.indecisive;
+/*
+    George Gannon
+    FoodPickerAdapter.java
 
+    Adapter for the recycler view used in the FoodPickerFragment.java.
+    More on why this is needed: https://developer.android.com/reference/androidx/recyclerview/widget/RecyclerView.Adapter
+ */
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -1,20 +1,21 @@
 package com.example.indecisive;
+/*
+    George Gannon
+    FoodPickerInputFragment.java
 
-import android.Manifest;
-import android.content.pm.PackageManager;
+    Responsible for collecting user input before we do a nearby search. It's mostly textboxes so it's not too complicated.
+ */
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
+
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.indecisive.databinding.FragmentFirstBinding;
 import com.example.indecisive.databinding.FragmentFoodPickerInputBinding;
 
 public class FoodPickerInputFragment extends Fragment {
@@ -33,7 +34,7 @@ public class FoodPickerInputFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        // Listener for the button. if you click it, find the food.
         binding.findFoodButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -43,17 +44,18 @@ public class FoodPickerInputFragment extends Fragment {
 
         );
     }
-
+    /*
+     Arguably the most important function in the file. Responsible for error checking input and placing
+     it into a bundle to get passed to the actual food picker input fragment.
+     */
     public void findFood(){
-
-
-        Bundle bundle = new Bundle();
-        bundle.putString("keyword", String.valueOf(binding.keywordInput.getEditText().getText()));
+        Bundle bundle = new Bundle(); // acts like a dictionary that is passed to another fragment
+        bundle.putString("keyword", String.valueOf(binding.keywordInput.getEditText().getText())); // place the input from keyword into the bundle.
         try {
-            bundle.putInt("magicNumber", Integer.parseInt(String.valueOf(binding.magicInput.getEditText().getText())));
+            bundle.putInt("magicNumber", Integer.parseInt(String.valueOf(binding.magicInput.getEditText().getText()))); // place the input of the magic number into the bundle
         } catch (NumberFormatException e) {
-            bundle.putInt("magicNumber", 5182000);
+            bundle.putInt("magicNumber", 5182000); // if they didn't provide anything, put my birthday as the number
         }
-        NavHostFragment.findNavController(FoodPickerInputFragment.this).navigate(R.id.action_food_picker_input_to_food_picker, bundle);
+        NavHostFragment.findNavController(FoodPickerInputFragment.this).navigate(R.id.action_food_picker_input_to_food_picker, bundle); // navigate to the next fragment
     }
 }

@@ -1,5 +1,11 @@
 package com.example.indecisive;
+/*
+    George Gannon
+    FoodPickerFragment.java
 
+    Responsible for displaying results of the food search as well as making associated API calls
+    developed from the previous input fragment,
+ */
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -71,27 +77,27 @@ public class FoodPickerFragment extends Fragment {
                         e.printStackTrace();
                     }
                 } else {
-                    // Explain to the user that the feature is unavailable because the
-                    // feature requires a permission that the user has denied. At the
-                    // same time, respect the user's decision. Don't link to system
-                    // settings in an effort to convince the user to change their
-                    // decision.
                 }
             });
 
     @Override
     @SuppressLint("MissingPermission")
+    /*
+        After the view is created, we need to do a few things:
+            create an adapter for our recycler view
+            prepare data for API calls
+            get location
+     */
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Integer seed = getArguments().getInt("magicNumber");
 
-        // recyclin view junk
+        // recyclin view junk.
+        // Mostly stuff required to get the pictures in a recycler view.
         mRecyclerView =(RecyclerView) getActivity().findViewById(R.id.food_picker_recycler);
-
-
-        bitmapList = new ArrayList<>();
+        bitmapList = new ArrayList<>(); // arary list of bitmaps
         adapter = new FoodPickerAdapter(bitmapList);
-        HorizontalLay = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        HorizontalLay = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false); // horizontal instead of vertical
         mRecyclerView.setLayoutManager(HorizontalLay);
         mRecyclerView.setAdapter(adapter);
         SnapHelper helper = new LinearSnapHelper();
@@ -103,7 +109,7 @@ public class FoodPickerFragment extends Fragment {
             randGenerator = new Random(seed);
         }
         try {
-            searchForFood();
+            searchForFood(); // begin api calls
         } catch (IOException e) {
             e.printStackTrace();
         }/*
@@ -136,7 +142,12 @@ public class FoodPickerFragment extends Fragment {
         return (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
 
     }
-
+    /*
+    This is the heavy lifting function. First in the chain of API calls.
+        The chain required:
+            Parse Input and do a nearby search -> from nearby search randomly pick one restaurant and search for more information using places search->
+            finally, get the pictures from the places search and access them through the API to get their bitmaps
+     */
     public void searchForFood() throws IOException {
         /* Get current location*/
 
@@ -150,11 +161,13 @@ public class FoodPickerFragment extends Fragment {
         googlePlacesUrl.append("&name="+getArguments().getString("keyword"));
         googlePlacesUrl.append("&key=" + "AIzaSyDln1uHXQm5lIEwR-ElwShFQ0F2WSNyxzM");
 
-        new GoogleAsyncTask().execute(googlePlacesUrl.toString());
+        new GoogleAsyncTask().execute(googlePlacesUrl.toString()); // first api call using built string above.
 
 
     }
-
+    /*
+        Helper function to randomly pick a restaurant from a list of restaurants.
+     */
     private JsonElement getRestaurant(){
 
         JsonArray restArr = restaurants.getAsJsonArray("results");
@@ -162,14 +175,17 @@ public class FoodPickerFragment extends Fragment {
         return temp;
     }
 
-
+    /*
+    First api call. has to be asynchronous so that way it doesn't block the application.
+     */
     public class GoogleAsyncTask extends AsyncTask<String, Void, String> {
         @Override
+        // BACKGROUND TASK.
         protected String doInBackground(String... strings) {
             Networker getter = new Networker();
             String tobeparsed;
             try {
-                tobeparsed = getter.get(strings[0].toString());
+                tobeparsed = getter.get(strings[0].toString()); // returns a string  of data using the networker
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -180,21 +196,28 @@ public class FoodPickerFragment extends Fragment {
 
 
         @Override
+        // Once the background task is finished, do the following.
         protected void onPostExecute(String result) {
-            restaurants = (JsonObject) JsonParser.parseString(result);
-            System.out.println(restaurants.toString());
-            JsonObject chosenRestaurant = getRestaurant().getAsJsonObject();
-            binding.restaurantName.setText(chosenRestaurant.get("name").toString());
-            String place_id = chosenRestaurant.get("place_id").toString();
-            StringBuilder googlePlacesUrl=new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");;
+            restaurants = (JsonObject) JsonParser.parseString(result); // convert string to JSON object
+            System.out.println(restaurants.toString()); // debugging
+            JsonObject chosenRestaurant = getRestaurant().getAsJsonObject(); // randomly pick restaurant
+            binding.restaurantName.setText(chosenRestaurant.get("name").toString()); // update gui to reflect name of restaurant
+            String place_id = chosenRestaurant.get("place_id").toString(); // need this for next api call
+
+            // Build string, same as last time, but do a photo search using the place_id
+            StringBuilder googlePlacesUrl=new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");
             googlePlacesUrl.append("place_id="+place_id.replaceAll("\"", ""));
             googlePlacesUrl.append("&fields=photo");
             googlePlacesUrl.append("&key=" + "AIzaSyDln1uHXQm5lIEwR-ElwShFQ0F2WSNyxzM");
-            new GoogleGetPicturesTask().execute(googlePlacesUrl.toString());
+            new GoogleGetPicturesTask().execute(googlePlacesUrl.toString()); // Next async task
 
         }
     }
 
+    /*
+        Second async task. Use the networker to make an api call about a specific place using the place_id fetched before,
+        and then get the photo ids.
+     */
     public class GoogleGetPicturesTask extends AsyncTask<String, Void, String>{
         @Override
         protected String doInBackground(String... strings) {
@@ -210,10 +233,11 @@ public class FoodPickerFragment extends Fragment {
             return tobeparsed;
         }
         @Override
+        // Build a photo list using the information fetched from the call.
         protected void onPostExecute(String result) {
             JsonObject photoArr = (JsonObject) JsonParser.parseString(result);
             List<String> stringList = new ArrayList<>();
-            for(int i = 0 ; i<3; i++) {
+            for(int i = 0 ; i<3; i++) { // get three photos from the list of photos, and add them to a string.
                 try{
                     StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/photo?");
                     googlePlacesUrl.append("&maxwidth=" + (int) width);
@@ -225,13 +249,16 @@ public class FoodPickerFragment extends Fragment {
                 }
             }
 
-            new GooglePictureAsyncTask().execute(stringList);
+            new GooglePictureAsyncTask().execute(stringList); // start a new asynchronous task that is dependent on the list of strings.
 
         }
     }
     public class GooglePictureAsyncTask extends AsyncTask<List<String>, Void, List<Bitmap> >{
 
         @Override
+        /*
+            Iterate through the strings and make an api call for each.
+         */
         protected List<Bitmap> doInBackground(List<String>... strings) {
             Networker getter = new Networker();
             List<Bitmap> tobeparsed = new ArrayList<>();
@@ -249,7 +276,13 @@ public class FoodPickerFragment extends Fragment {
         }
 
         @Override
+        /*
+         This will not execute until that arrayList is populated with something.
+         */
         protected void onPostExecute(List<Bitmap> result) {
+            /*
+            This is mainly gui stuff. Notify datasetchanged is so that the recyclerview rebinds with the new pictures
+             */
             adapter = new FoodPickerAdapter(result);
             mRecyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();

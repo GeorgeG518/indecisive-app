@@ -25,7 +25,7 @@ public class SecondFragment extends Fragment {
     Button Submit;
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState); }
      //   setContentView(R.layout.fragment_second);
 
      //  firstNumberInput = (EditText) findViewById(R.id.firstNumberInput);

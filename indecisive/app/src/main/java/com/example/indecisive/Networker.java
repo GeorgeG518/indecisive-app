@@ -1,3 +1,12 @@
+/*
+    George Gannon
+    Networker.java
+
+    Networker that performs network calls, but assumes you are using them in an asynchronous method e.g AsyncTask. Two methods:
+        get(string:url) returns a string from an address.
+        getBitmap(string:url): gets a bitmap from an address.
+
+ */
 package com.example.indecisive;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,6 +28,9 @@ public class Networker  {
     final OkHttpClient client = new OkHttpClient();
     String response_ret = "";
     Bitmap response_bit;
+    /*
+        Returns a string of the data retrieved from a given url.
+     */
     String get(String url) throws IOException {
 
         Request request = new Request.Builder().url(url).build();
