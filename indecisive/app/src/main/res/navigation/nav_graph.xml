@@ -27,6 +27,9 @@
             android:name="magicNumber"
             app:argType="integer"
             android:defaultValue="5182000" />
+        <action
+            android:id="@+id/action_food_picker_to_food_picker_input"
+            app:destination="@id/food_picker_input" />
     </fragment>
 
     <fragment

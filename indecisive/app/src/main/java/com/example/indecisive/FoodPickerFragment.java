@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,9 +30,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.indecisive.databinding.FragmentFoodPickerBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.JsonArray;
@@ -49,7 +52,7 @@ public class FoodPickerFragment extends Fragment {
     private FusedLocationProviderClient fusedLocationProviderClient;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager HorizontalLay;
-
+    private Bundle bundlecopy;
     private JsonObject restaurants;
     private List<Bitmap> bitmapList;
 
@@ -90,7 +93,9 @@ public class FoodPickerFragment extends Fragment {
      */
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        bundlecopy=savedInstanceState;
         int seed = getArguments().getInt("magicNumber");
+
 
         // recyclin view junk.
         // Mostly stuff required to get the pictures in a recycler view.
@@ -112,7 +117,8 @@ public class FoodPickerFragment extends Fragment {
             searchForFood(); // begin api calls
         } catch (IOException e) {
             e.printStackTrace();
-        }/*
+        }
+        /*
             fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
                 @Override
                 public void onComplete(@NonNull Task<Location> task) {
@@ -128,11 +134,11 @@ public class FoodPickerFragment extends Fragment {
                         }
                     }
                 }
-            });*/
+            });
 
-
-
+         // */
     }
+
     public void requestPermissions(){
         requestPermissionLauncher.launch(
                 Manifest.permission.ACCESS_FINE_LOCATION);
@@ -200,7 +206,16 @@ public class FoodPickerFragment extends Fragment {
         protected void onPostExecute(String result) {
             restaurants = (JsonObject) JsonParser.parseString(result); // convert string to JSON object
             System.out.println(restaurants.toString()); // debugging
+            System.out.println(restaurants.get("results").getAsJsonArray().size()==0);
+            if(restaurants.get("results").getAsJsonArray().size()==0){
+                Toast roast = Toast.makeText(getContext(), "Zero results were found. Try expanding your search radius or refining your keywords.", Toast.LENGTH_LONG);
+                roast.show();
+                NavHostFragment.findNavController(FoodPickerFragment.this).navigate(R.id.action_food_picker_to_food_picker_input, bundlecopy); // navigate to the next fragment
+                return;
+            }
             JsonObject chosenRestaurant = getRestaurant().getAsJsonObject(); // randomly pick restaurant
+
+
             binding.restaurantName.setText(chosenRestaurant.get("name").toString()); // update gui to reflect name of restaurant
             String place_id = chosenRestaurant.get("place_id").toString(); // need this for next api call
 
