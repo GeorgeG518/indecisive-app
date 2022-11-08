@@ -2,16 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/NumberTwoTextBox"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SecondFragment">
-
+    <!--
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    </LinearLayout>
+    </LinearLayout> -->
 
     <Button
         android:id="@+id/button_second"
@@ -44,10 +45,10 @@
         app:layout_constraintVertical_bias="0.042" />
 
     <EditText
-        android:id="@+id/editTextNumber"
+        android:id="@+id/NumberOneTextBox"
         android:layout_width="130dp"
         android:layout_height="48dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="28dp"
         android:ems="10"
         android:hint="first number"
         android:inputType="number"
@@ -68,7 +69,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <EditText
-        android:id="@+id/editTextNumber2"
+        android:id="@+id/TextNumber2Box"
         android:layout_width="141dp"
         android:layout_height="43dp"
         android:layout_marginTop="28dp"
@@ -81,7 +82,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <EditText
-        android:id="@+id/editTextNumber3"
+        android:id="@+id/NumberAmountTextBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -165,7 +166,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumber3" />
+        app:layout_constraintTop_toBottomOf="@+id/NumberAmountTextBox" />
 
     <Button
         android:id="@+id/numberEnterbutton"
@@ -175,5 +176,18 @@
         android:text="Enter"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextNumber3" />
+        app:layout_constraintTop_toBottomOf="@+id/NumberAmountTextBox" />
+
+    <TextView
+        android:id="@+id/finalRandomNumbers"
+        android:layout_width="355dp"
+        android:layout_height="202dp"
+        android:fontFamily="@font/chela_one"
+        app:layout_constraintBottom_toBottomOf="@+id/button_second"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView13"
+        app:layout_constraintVertical_bias="0.122" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
