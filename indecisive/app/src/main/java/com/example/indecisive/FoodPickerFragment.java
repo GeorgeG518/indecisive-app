@@ -6,12 +6,10 @@ package com.example.indecisive;
     Responsible for displaying results of the food search as well as making associated API calls
     developed from the previous input fragment,
  */
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,20 +19,32 @@ import androidx.recyclerview.widget.SnapHelper;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.location.Location;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.indecisive.databinding.FragmentFoodPickerBinding;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.JsonArray;
@@ -49,17 +59,19 @@ import java.util.Random;
 
 public class FoodPickerFragment extends Fragment {
     private FragmentFoodPickerBinding binding;
-    private FusedLocationProviderClient fusedLocationProviderClient;
     private RecyclerView mRecyclerView;
     private LinearLayoutManager HorizontalLay;
     private Bundle bundlecopy;
     private JsonObject restaurants;
     private List<Bitmap> bitmapList;
+    private LocationRequest locationRequest;
 
     private FoodPickerAdapter adapter;
     private double width = Resources.getSystem().getDisplayMetrics().widthPixels;
     private double height;
 
+    private double lat;
+    private double lon;
     Random randGenerator;
 
     @Nullable
@@ -68,23 +80,16 @@ public class FoodPickerFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = FragmentFoodPickerBinding.inflate(inflater, container, false);
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(2000);
+
         return binding.getRoot();
     }
 
-    private ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (isGranted) {
-                    try {
-                        searchForFood();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                }
-            });
 
     @Override
-    @SuppressLint("MissingPermission")
     /*
         After the view is created, we need to do a few things:
             create an adapter for our recycler view
@@ -113,41 +118,13 @@ public class FoodPickerFragment extends Fragment {
         }else {
             randGenerator = new Random(seed);
         }
-        try {
-            searchForFood(); // begin api calls
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        /*
-            fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-                @Override
-                public void onComplete(@NonNull Task<Location> task) {
-                    Location location = task.getResult();
-                    if (location == null) {
-                        //TODO;
-                    } else {
-                        try {
-                            System.out.println(location.getLatitude() + " "+location.getLongitude());
-                            searchForFood();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
+        getLocation();
 
-         // */
-    }
 
-    public void requestPermissions(){
-        requestPermissionLauncher.launch(
-                Manifest.permission.ACCESS_FINE_LOCATION);
-    }
 
-    public boolean getPermissions(){
-        return (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED);
 
     }
+
     /*
     This is the heavy lifting function. First in the chain of API calls.
         The chain required:
@@ -159,7 +136,7 @@ public class FoodPickerFragment extends Fragment {
 
 
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        googlePlacesUrl.append("&location=" + "35.84897592819507" + "%2C" + "-86.36885554204993");
+        googlePlacesUrl.append("&location=" + lat + "%2C" + lon);
 
         //googlePlacesUrl.append("&location=-33.8670522%2C151.1957362");
         googlePlacesUrl.append("&radius=" + "30000");
@@ -304,4 +281,117 @@ public class FoodPickerFragment extends Fragment {
             System.out.println(result);
         }
     }
+    /*
+        Note from George: Everything below this point was based off of this youtube tutorial because I could not figure out how
+        to do it on my own. I tried and tried, but couldn't crack it. The documentation wasn't the best because it didn't cover all of the
+        moving parts.
+
+        Link: https://www.youtube.com/watch?v=mbQd6frpC3g
+     */
+    @SuppressLint("MissingPermission")
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (isGPSEnabled()) {
+                LocationServices.getFusedLocationProviderClient(getActivity())
+                        .requestLocationUpdates(locationRequest, new LocationCallback() {
+                            @Override
+                            public void onLocationResult(@NonNull LocationResult locationResult) {
+                                super.onLocationResult(locationResult);
+
+                                LocationServices.getFusedLocationProviderClient(getActivity())
+                                        .removeLocationUpdates(this);
+
+                                if (locationResult != null && locationResult.getLocations().size() >0){
+
+                                    int index = locationResult.getLocations().size() - 1;
+                                    lat = locationResult.getLocations().get(index).getLatitude();
+                                    lon = locationResult.getLocations().get(index).getLongitude();
+                                    System.out.println("lat "+ lat + lon);
+                                    try {
+                                        searchForFood(); // begin api calls
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }, Looper.getMainLooper());
+            }else{
+                turnOnGPS();
+            }
+        }else {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == 1){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
+
+                if (isGPSEnabled()) {
+
+                    getLocation();
+
+                }else {
+
+                    turnOnGPS();
+                }
+            }
+        }
+
+
+    }
+    private void turnOnGPS() {
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+
+        Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(getContext())
+                .checkLocationSettings(builder.build());
+
+        result.addOnCompleteListener(new OnCompleteListener<LocationSettingsResponse>() {
+            @Override
+            public void onComplete(@NonNull Task<LocationSettingsResponse> task) {
+
+                try {
+                    LocationSettingsResponse response = task.getResult(ApiException.class);
+                    //Toast.makeText(MainActivity.this, "GPS is already tured on", Toast.LENGTH_SHORT).show();
+
+                } catch (ApiException e) {
+
+                    switch (e.getStatusCode()) {
+                        case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+
+                            try {
+                                ResolvableApiException resolvableApiException = (ResolvableApiException) e;
+                                resolvableApiException.startResolutionForResult(getActivity(), 2);
+                            } catch (IntentSender.SendIntentException ex) {
+                                ex.printStackTrace();
+                            }
+                            break;
+
+                        case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                            //Device does not have location
+                            break;
+                    }
+                }
+            }
+        });
+
+    }
+
+    private boolean isGPSEnabled() {
+        LocationManager locationManager = null;
+        boolean isEnabled = false;
+
+        if (locationManager == null) {
+            locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        }
+
+        isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        return isEnabled;
+
+    }
+
 }
