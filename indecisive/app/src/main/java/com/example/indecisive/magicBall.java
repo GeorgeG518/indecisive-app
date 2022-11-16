@@ -7,6 +7,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import java.util.Random;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -14,6 +18,13 @@ import android.view.ViewGroup;
  * create an instance of this fragment.
  */
 public class magicBall extends Fragment {
+    //private ImageView ballImage;
+    private TextView answerText;
+
+    private String[] answersArray = {"It is certain", "It is decidedly so", "Without a doubt", "Yes definitely", "You may rely on it", "As I see it, yes",
+            "Most likely", "Outlook good", "Yes", "Signs point to yes", "Reply hazy try again", "Ask again later",
+            "Better not tell you now", "Cannot predict now", "Concentrate and ask again", "Don't count on it",
+            "My reply is no", "My sources say no", "Outlook not so good", "Very doubtful"};
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -49,16 +60,30 @@ public class magicBall extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //ballImage.findViewById(R.id.imageView3);
+        answerText.findViewById(R.id.textView16);
+        //ballImage.setOnClickListener((View.OnClickListener) this);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
+    /*public void onClick(View view){
+        switch(view.getId())
+        {
+            case R.id.imageView3:
+                int rand = new Random().nextInt(answersArray.length);
+                answerText.setText(answersArray[rand]);
+                break;
+        }
+    }*/
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         return inflater.inflate(R.layout.fragment_magic_ball, container, false);
     }
 }
