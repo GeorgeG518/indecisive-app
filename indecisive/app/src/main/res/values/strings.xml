@@ -14,6 +14,7 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="food_picker">Food Picker</string>
+    <string name="food_picker_input" />
     <string name="dice_roller">More Options</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
@@ -106,4 +107,5 @@
     </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
