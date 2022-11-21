@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.indecisive.databinding.FragmentFoodPickerBinding;
 import com.google.android.gms.location.FusedLocationProviderClient;
