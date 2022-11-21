@@ -25,7 +25,7 @@ public class SecondFragment extends Fragment {
     Button Submit;
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);}
      //   setContentView(R.layout.fragment_second);
 
      //  firstNumberInput = (EditText) findViewById(R.id.firstNumberInput);
@@ -34,7 +34,7 @@ public class SecondFragment extends Fragment {
 
       //  submitButton = (Button) findViewById(R.id.submitButton);
         //submitButton.setOnClickListener(new View.OnClickListener()
- /*
+
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -64,7 +64,7 @@ public class SecondFragment extends Fragment {
         binding = null;
     }
 
-*/
+
 
 
 }
