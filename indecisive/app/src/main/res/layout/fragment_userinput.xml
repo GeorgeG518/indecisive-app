@@ -1,7 +1,10 @@
+<!-- XML for userinput.java formatted by Ahmad Mohammad -->
+
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/recyclenames"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SecondFragment">
@@ -17,4 +20,90 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.945" />
+
+    <TextView
+        android:id="@+id/textView15"
+        android:layout_width="320dp"
+        android:layout_height="18dp"
+        android:fontFamily="@font/chela_one"
+        android:rotation="360"
+        android:rotationY="-360"
+        android:text="Please enter a value and hit submit to add to the list!"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2 "
+        android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/button_second"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.494"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.047" />
+
+    <Button
+        android:id="@+id/enterinputbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.89" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/button_second"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.441"
+        tools:layout_editor_absoluteX="-14dp">
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/enterinputnames"
+        android:layout_width="252dp"
+        android:layout_height="67dp"
+        android:hint="enter choices here!"
+        app:layout_constraintBottom_toTopOf="@+id/enterinputbutton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+    <TextView
+        android:id="@+id/winnernametextfield"
+        android:layout_width="367dp"
+        android:layout_height="134dp"
+        android:layout_marginBottom="56dp"
+        android:fontFamily="@font/chela_one"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/button_second"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+        app:layout_constraintVertical_bias="0.995" />
+
+    <Button
+        android:id="@+id/finishedbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose Winner!... or loser"
+        app:layout_constraintBottom_toTopOf="@+id/winnernametextfield"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="127dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="6dp"
+        android:fontFamily="@font/chela_one"
+        android:text="items added: 0"
+        app:layout_constraintBottom_toTopOf="@+id/enterinputbutton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/enterinputnames" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
