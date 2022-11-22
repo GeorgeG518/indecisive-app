@@ -115,6 +115,13 @@ public class userinput extends Fragment {
 
                     String holder = "";
 
+                    if(String.valueOf(binding.enterinputnames.getText()) == "")
+                    {
+                        binding.enterinputnames.setHint("ENTER CHOICES DUMMY!");
+                        return;
+                    }
+
+
                     holder = String.valueOf(binding.enterinputnames.getText());
                     arr[i] = holder; // assign array at i to textvield value
                     i++;
@@ -142,6 +149,13 @@ public class userinput extends Fragment {
             public void onClick(View view) {
                 // maybe create function to get input firld box
                 // amd maybe add to array
+
+                if(arr[0] =="")
+                {
+                    binding.enterinputnames.setHint("ENTER CHOICES DUMMY!");
+                    binding.winnernametextfield.setHint("ENTER CHOICES DUMMY!");
+                    return;
+                }
 
                 Random randnum = new Random(100-1);
                 int q = randnum.nextInt(i-1);

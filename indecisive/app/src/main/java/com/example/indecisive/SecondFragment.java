@@ -36,7 +36,6 @@ public class SecondFragment extends Fragment {
 
         super.onCreate(savedInstanceState);
     }
-
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
@@ -150,5 +149,4 @@ public class SecondFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
 }
