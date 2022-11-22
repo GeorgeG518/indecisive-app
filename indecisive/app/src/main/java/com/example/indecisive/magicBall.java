@@ -2,6 +2,7 @@ package com.example.indecisive;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -20,8 +21,8 @@ import java.util.Random;
  * create an instance of this fragment.
  */
 public class magicBall extends Fragment {
-    //private ImageView ballImage;
-    private TextView answerText;
+    //private ImageView ballButton;
+    //private TextView answerText;
 
     private String[] answersArray = {"It is certain", "It is decidedly so", "Without a doubt", "Yes definitely", "You may rely on it", "As I see it, yes",
             "Most likely", "Outlook good", "Yes", "Signs point to yes", "Reply hazy try again", "Ask again later",
@@ -60,34 +61,52 @@ public class magicBall extends Fragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //ballImage.findViewById(R.id.imageView3);
+  /*      //ballImage.findViewById(R.id.imageView3);
         //answerText.findViewById(R.id.textView16);
-        //ballImage.setOnClickListener((View.OnClickListener) this);
-        //binding.ballImage !!!
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        binding.ballButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                magic();
+            }
         }
-    }
-
-    /*public void onClick(View view){
-        switch(view.getId())
-        {
-            case R.id.imageView3:
-                int rand = new Random().nextInt(answersArray.length);
-                answerText.setText(answersArray[rand]);
-                break;
-        }
+                );
     }*/
+
+        //binding.ballImage !!!
+        //if (getArguments() != null) {
+          //  mParam1 = getArguments().getString(ARG_PARAM1);
+            //mParam2 = getArguments().getString(ARG_PARAM2);
+        //}
+   // }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentMagicBallBinding.inflate(inflater, container, false);
+
         return binding.getRoot();
         //return inflater.inflate(R.layout.fragment_magic_ball, container, false);
     }
+
+
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.ballButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                magic();
+            }
+        });
+
+    }
+    public void magic(){
+        //binding.ballButton;
+        String answer = String.valueOf(binding.answerText.getText());
+        int rand = new Random().nextInt(answersArray.length);
+        binding.displayText.setText(answersArray[rand]);
+    }
 }
+
