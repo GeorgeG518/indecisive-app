@@ -2,11 +2,17 @@ package com.example.indecisive;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.indecisive.databinding.FragmentActualdicerollerBinding;
+import com.example.indecisive.databinding.FragmentRealDiceRollerBinding;
+
+import java.util.Random;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -15,6 +21,12 @@ import android.view.ViewGroup;
  */
 public class actualdiceroller extends Fragment {
 
+    private FragmentActualdicerollerBinding binding;
+    int number = 0;  //number of dice
+    int total = 0;   //total of all dice rolled
+    int random = 0;  //random number
+
+    boolean check = false;    //textfield
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -55,10 +67,66 @@ public class actualdiceroller extends Fragment {
         }
     }
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_actualdiceroller, container, false);
+        {
+
+            binding = FragmentActualdicerollerBinding.inflate(inflater, container, false);
+            return binding.getRoot();
+
+        }
+        //return inflater.inflate(R.layout.fragment_real_dice_roller, container, false);
+    }
+
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.rollbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                check = Check();
+
+                if (Check()) {
+
+                    diceNumber();
+
+                    Random rannum = new Random();
+                    binding.rolled.setText(" ");
+                    binding.totalrolled.setText(" ");
+                    for (int i = 0; i < number; i++) {
+                        random = rannum.nextInt(6) + 1;
+                        total = total + random;
+                        binding.rolled.append(random+ "  ");
+                        binding.totalrolled.setText(String.valueOf(total));
+                    }
+
+
+                }
+            }
+        });
+    }
+    public void diceNumber() {
+
+        number = Integer.parseInt(String.valueOf(binding.numberfield.getText()));
+    }
+    private boolean Check() {
+
+        if (!binding.numberfield.getText().toString().matches("[0-9]+"))
+        {
+            binding.numberfield.setError("This field is required");
+            return false;
+        }
+        return true;
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
