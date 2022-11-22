@@ -2,12 +2,17 @@ package com.example.indecisive;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.indecisive.databinding.FragmentRealDiceRollerBinding;
+//import com.example.indecisive.data binding.FragmentSecondBinding;
+
+import java.util.Random;
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link RealDiceRoller#newInstance} factory method to
@@ -15,18 +20,16 @@ import android.view.ViewGroup;
  */
 public class RealDiceRoller extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
+    private FragmentRealDiceRollerBinding binding;
+    int number = 0;  //number of dice
+    int total = 0;   //total of all dice rolled
+    int random = 0;  //random number
+    boolean check = false;    //text field
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public RealDiceRoller() {
-        // Required empty public constructor
-    }
 
     /**
      * Use this factory method to create a new instance of
@@ -36,8 +39,9 @@ public class RealDiceRoller extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment RealDiceRoller.
      */
-    // TODO: Rename and change types and number of parameters
+
     public static RealDiceRoller newInstance(String param1, String param2) {
+
         RealDiceRoller fragment = new RealDiceRoller();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -47,18 +51,68 @@ public class RealDiceRoller extends Fragment {
     }
 
     @Override
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_real_dice_roller, container, false);
+        {
+
+            binding = FragmentRealDiceRollerBinding.inflate(inflater, container, false);
+            return binding.getRoot();
+
+        }
+        //return inflater.inflate(R.layout.fragment_real_dice_roller, container, false);
+    }
+
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        binding.rollbutton.setOnClickListener(view1 -> {
+            check = Check();   //calls Check Function
+
+            if (Check()) {     //if field isn't empty
+
+                diceNumber();   //calls dice number function
+
+                Random rannum = new Random();         //creates a random number
+                binding.rolled.setText(" ");
+                binding.totalrolled.setText(" ");     //displays total rolled
+                for (int i = 0; i < number; i++) {//rolls dice based on how many the user entered
+                    random = rannum.nextInt(6) + 1;
+                    total = total + random;             //calculates total
+                    binding.rolled.append(random + " "); //displays numbers rolled
+                    binding.totalrolled.setText(total);  //displays total
+                }
+            }
+
+
+        });
+            }
+
+
+        public void diceNumber() {            //puts number entered by user into number variable
+
+            number = Integer.parseInt(String.valueOf(binding.numberfield.getText()));
+        }
+        private boolean Check() {   //makes sure amount of dice was entered
+
+            if (!binding.numberfield.getText().toString().matches("[0-9]+"))
+            {
+                binding.numberfield.setError("This field is required");
+                return false;
+            }
+            return true;
+        }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }
