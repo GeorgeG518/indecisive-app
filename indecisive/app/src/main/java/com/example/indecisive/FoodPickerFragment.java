@@ -136,7 +136,7 @@ public class FoodPickerFragment extends Fragment {
      */
     public void searchForFood() throws IOException {
         /* Get current location*/
-
+        binding.progressBar1.setVisibility(View.VISIBLE);
 
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlacesUrl.append("&location=" + lat + "%2C" + lon);
@@ -197,6 +197,7 @@ public class FoodPickerFragment extends Fragment {
 
 
             binding.restaurantName.setText(chosenRestaurant.get("name").toString()); // update gui to reflect name of restaurant
+            binding.restaurantAddress.setText(chosenRestaurant.get("vicinity").toString());
             String place_id = chosenRestaurant.get("place_id").toString(); // need this for next api call
 
             // Build string, same as last time, but do a photo search using the place_id
@@ -282,6 +283,7 @@ public class FoodPickerFragment extends Fragment {
             mRecyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
             System.out.println(result);
+            binding.progressBar1.setVisibility(View.GONE);
         }
     }
     /*

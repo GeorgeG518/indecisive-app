@@ -108,29 +108,28 @@ public class userinput extends Fragment {
                     // create function to get input field box (binding input names)
                     // maybe add to array
 
-                     /*
-                     * init empty string to fill with
-                     * "enterinputnames text field"
-                     * */
-
+                    // empty string holder
                     String holder = "";
 
-                    if(String.valueOf(binding.enterinputnames.getText()) == "")
+                    // crash check. makes sure valid input
+                    if (!binding.enterinputnames.getText().toString().matches("[a-z]+") && !binding.enterinputnames.getText().toString().matches("[0-9]+"))
                     {
-                        binding.enterinputnames.setHint("ENTER CHOICES DUMMY!");
-                        return;
+                        binding.enterinputnames.setError("This field is required");
                     }
 
+                    // if data is valid...
+                    else
+                    {
+                        holder = String.valueOf(binding.enterinputnames.getText());
+                        arr[i] = holder; // assign array at i to textvield value
+                        i++;
 
-                    holder = String.valueOf(binding.enterinputnames.getText());
-                    arr[i] = holder; // assign array at i to textvield value
-                    i++;
+                        // clear
 
-                    // clear
+                        binding.enterinputnames.setHint("Enter next choice!");
 
-                    binding.enterinputnames.setHint("Enter next choice!");
-
-                    binding.textView14.setText("items added: " + i);
+                        binding.textView14.setText("items added: " + i);
+                    }
 
                 }
             });
@@ -150,37 +149,55 @@ public class userinput extends Fragment {
                 // maybe create function to get input firld box
                 // amd maybe add to array
 
-                if(arr[0] =="")
+                // if arr is empty tell them to enter choices
+
+            /*    if(arr[0] =="")
                 {
                     binding.enterinputnames.setHint("ENTER CHOICES DUMMY!");
                     binding.winnernametextfield.setHint("ENTER CHOICES DUMMY!");
                     return;
                 }
+                else {
+                // crash check. makes sure valid input
+                if (!binding.enterinputnames.getText().toString().matches("[a-z]+") && !binding.enterinputnames.getText().toString().matches("[0-9]+"))
+                {
+                    binding.enterinputnames.setError("This field is required");
+                }
 
-                Random randnum = new Random(100-1);
-                int q = randnum.nextInt(i-1);
+                else
+                {*/
+                    Random randnum = new Random(100 - 1);
+                    int q = randnum.nextInt(i - 1);
 
-                i = 0;
+                    i = 0;
 
-                binding.winnernametextfield.setText(arr[q]);
-                binding.textView14.setText("items added: " + i);
+                    binding.winnernametextfield.setText(arr[q]);
+                    binding.textView14.setText("items added: " + i);
+
+
+
+        }}
+
+        );
+
+        binding.reset.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+
+
+            public void onClick(View view) {
 
                 for(int p = 0; p < arr.length; p++)
                 {
                     arr[p] = "";
                 }
-
-
-
-            }
-        }
-
+                i = 0;
+                binding.textView14.setText("items added: " + i);
+            }}
         );
 
 
-    }
 
-
-
+}
 }
 

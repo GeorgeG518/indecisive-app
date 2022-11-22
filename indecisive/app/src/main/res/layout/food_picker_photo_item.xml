@@ -14,7 +14,7 @@
         android:id="@+id/card_view_image"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:padding="16dp"
         app:shapeAppearance="@style/roundedCornersImageView"/>
 
