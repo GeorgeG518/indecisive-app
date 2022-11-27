@@ -59,6 +59,7 @@ import com.google.gson.JsonParser;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.Random;
 
 
@@ -77,10 +78,10 @@ public class FoodPickerFragment extends Fragment {
     private Integer radius;
     private double lat;
     private double lon;
-
     private double restlat;
     private double restlon;
     private String restadd;
+    private String API_KEY;
     Random randGenerator;
 
     @Nullable
@@ -121,6 +122,11 @@ public class FoodPickerFragment extends Fragment {
         mRecyclerView.setAdapter(adapter);
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(mRecyclerView);
+        try {
+            API_KEY = getContext().getPackageManager().getApplicationInfo(getContext().getPackageName(),PackageManager.GET_META_DATA).metaData.getString("com.google.android.geo.API_KEY");
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         binding.retry.setVisibility(View.GONE);
         binding.letsgo.setVisibility(View.GONE);
@@ -179,7 +185,7 @@ public class FoodPickerFragment extends Fragment {
         googlePlacesUrl.append("&radius=" + rad);
         googlePlacesUrl.append("&types=" + "restaurant");
         googlePlacesUrl.append("&name="+getArguments().getString("keyword"));
-        googlePlacesUrl.append("&key=" + "AIzaSyDln1uHXQm5lIEwR-ElwShFQ0F2WSNyxzM");
+        googlePlacesUrl.append("&key=" + API_KEY);
 
         new GoogleAsyncTask().execute(googlePlacesUrl.toString()); // first api call using built string above.
 
@@ -241,7 +247,7 @@ public class FoodPickerFragment extends Fragment {
             StringBuilder googlePlacesUrl=new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");
             googlePlacesUrl.append("place_id="+place_id.replaceAll("\"", ""));
             googlePlacesUrl.append("&fields=photo");
-            googlePlacesUrl.append("&key=" + "AIzaSyDln1uHXQm5lIEwR-ElwShFQ0F2WSNyxzM");
+            googlePlacesUrl.append("&key=" + API_KEY);
             new GoogleGetPicturesTask().execute(googlePlacesUrl.toString()); // Next async task
 
         }
@@ -275,7 +281,7 @@ public class FoodPickerFragment extends Fragment {
                     StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/photo?");
                     googlePlacesUrl.append("&maxwidth=" + (int) width);
                     googlePlacesUrl.append("&photo_reference=" + photoArr.getAsJsonObject("result").getAsJsonArray("photos").get(i).getAsJsonObject().get("photo_reference").toString().replaceAll("\"", ""));
-                    googlePlacesUrl.append("&key=" + "AIzaSyDln1uHXQm5lIEwR-ElwShFQ0F2WSNyxzM");
+                    googlePlacesUrl.append("&key=" + API_KEY);
                     stringList.add(googlePlacesUrl.toString());
                 }catch(IndexOutOfBoundsException e){
                     continue;
