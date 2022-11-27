@@ -20,11 +20,13 @@ import androidx.recyclerview.widget.SnapHelper;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Looper;
@@ -72,9 +74,13 @@ public class FoodPickerFragment extends Fragment {
     private FoodPickerAdapter adapter;
     private double width = Resources.getSystem().getDisplayMetrics().widthPixels;
     private double height;
-
+    private Integer radius;
     private double lat;
     private double lon;
+
+    private double restlat;
+    private double restlon;
+    private String restadd;
     Random randGenerator;
 
     @Nullable
@@ -103,7 +109,7 @@ public class FoodPickerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         bundlecopy=savedInstanceState;
         int seed = getArguments().getInt("magicNumber");
-
+        radius = getArguments().getInt("radiusNumber")*1000;
 
         // recyclin view junk.
         // Mostly stuff required to get the pictures in a recycler view.
@@ -116,6 +122,8 @@ public class FoodPickerFragment extends Fragment {
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(mRecyclerView);
 
+        binding.retry.setVisibility(View.GONE);
+        binding.letsgo.setVisibility(View.GONE);
         if(seed == 5182000){
             randGenerator = new Random();
         }else {
@@ -123,7 +131,32 @@ public class FoodPickerFragment extends Fragment {
         }
         getLocation();
 
+        binding.retry.setOnClickListener(new View.OnClickListener(){
 
+             @Override
+             public void onClick(View view) {
+                 binding.restaurantName.setText("");
+                 binding.restaurantAddress.setText("");
+                 List<Bitmap> empty = new ArrayList<>();
+                 adapter = new FoodPickerAdapter(empty);
+                 mRecyclerView.setAdapter(adapter);
+                 adapter.notifyDataSetChanged();
+                 getLocation();
+             }
+                                         }
+        );
+
+        binding.letsgo.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                // Creates an Intent that will load a map where the app went to
+                restadd.replace(' ','+');
+                Uri gmmIntentUri = Uri.parse("geo:0,0?q="+restadd);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
+            }
+        });
 
 
     }
@@ -142,7 +175,8 @@ public class FoodPickerFragment extends Fragment {
         googlePlacesUrl.append("&location=" + lat + "%2C" + lon);
 
         //googlePlacesUrl.append("&location=-33.8670522%2C151.1957362");
-        googlePlacesUrl.append("&radius=" + "30000");
+        String rad = radius.toString();
+        googlePlacesUrl.append("&radius=" + rad);
         googlePlacesUrl.append("&types=" + "restaurant");
         googlePlacesUrl.append("&name="+getArguments().getString("keyword"));
         googlePlacesUrl.append("&key=" + "AIzaSyDln1uHXQm5lIEwR-ElwShFQ0F2WSNyxzM");
@@ -197,7 +231,10 @@ public class FoodPickerFragment extends Fragment {
 
 
             binding.restaurantName.setText(chosenRestaurant.get("name").toString()); // update gui to reflect name of restaurant
+            restadd = chosenRestaurant.get("vicinity").toString();
             binding.restaurantAddress.setText(chosenRestaurant.get("vicinity").toString());
+            restlat = chosenRestaurant.get("geometry").getAsJsonObject().get("location").getAsJsonObject().get("lat").getAsDouble();
+            restlon = chosenRestaurant.get("geometry").getAsJsonObject().get("location").getAsJsonObject().get("lng").getAsDouble();
             String place_id = chosenRestaurant.get("place_id").toString(); // need this for next api call
 
             // Build string, same as last time, but do a photo search using the place_id
@@ -284,6 +321,8 @@ public class FoodPickerFragment extends Fragment {
             adapter.notifyDataSetChanged();
             System.out.println(result);
             binding.progressBar1.setVisibility(View.GONE);
+            binding.retry.setVisibility(View.VISIBLE);
+            binding.letsgo.setVisibility(View.VISIBLE);
         }
     }
     /*
@@ -305,6 +344,8 @@ public class FoodPickerFragment extends Fragment {
 
                                 LocationServices.getFusedLocationProviderClient(getActivity())
                                         .removeLocationUpdates(this);
+
+
 
                                 if (locationResult != null && locationResult.getLocations().size() >0){
 

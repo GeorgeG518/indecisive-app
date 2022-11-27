@@ -75,6 +75,7 @@ public class FoodPickerInputFragment extends Fragment {
         } catch (NumberFormatException e) {
             bundle.putInt("magicNumber", 5182000); // if they didn't provide anything, put my birthday as the number
         }
+        bundle.putInt("radiusNumber", binding.seekBar.getProgress() );
         NavHostFragment.findNavController(FoodPickerInputFragment.this).navigate(R.id.action_food_picker_input_to_food_picker, bundle); // navigate to the next fragment
     }
 }
