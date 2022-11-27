@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<!--Sarra Zerairia-->
+
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,10 +9,30 @@
     app:startDestination="@id/FirstFragment">
 
     <fragment
+        android:id="@+id/food_picker_input"
+        android:name="com.example.indecisive.FoodPickerInputFragment"
+        android:label="@string/food_picker_input"
+        tools:layout="@layout/fragment_food_picker_input">
+        <action
+            android:id="@+id/action_food_picker_input_to_food_picker"
+            app:destination="@id/food_picker" />
+    </fragment>
+    <fragment
         android:id="@+id/food_picker"
         android:name="com.example.indecisive.FoodPickerFragment"
         android:label="@string/food_picker"
         tools:layout="@layout/fragment_food_picker">
+        <argument
+            android:name="keyword"
+            app:argType="string"
+            android:defaultValue="restaurants" />
+        <argument
+            android:name="magicNumber"
+            app:argType="integer"
+            android:defaultValue="5182000" />
+        <action
+            android:id="@+id/action_food_picker_to_food_picker_input"
+            app:destination="@id/food_picker_input" />
     </fragment>
 
     <fragment
@@ -22,8 +45,21 @@
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/diceroller" />
         <action
-            android:id="@+id/home_to_foodpicker"
-            app:destination="@id/food_picker" />
+            android:id="@+id/action_FirstFragment_to_food_picker"
+            app:destination="@id/food_picker_input" />
+        <action
+            android:id="@+id/action_FirstFragment_to_moreOptions2"
+            app:destination="@id/moreOptions2" />
+        <action
+            android:id="@+id/action_FirstFragment_to_userinput"
+            app:destination="@id/userinput" />
+        <action
+            android:id="@+id/action_FirstFragment_to_magicBall"
+            app:destination="@id/magicBall" />
+        <action
+            android:id="@+id/action_FirstFragment_to_actualdiceroller"
+            app:destination="@id/actualdiceroller" />
+
     </fragment>
     <fragment
         android:id="@+id/diceroller"
@@ -33,6 +69,42 @@
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/moreOptions2"
+        android:name="com.example.indecisive.moreOptions"
+        android:label="@string/fragment_more_options"
+        tools:layout="@layout/fragment_more_options" >
+        <action
+            android:id="@+id/action_moreOptions2_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userinput"
+        android:name="com.example.indecisive.userinput"
+        android:label="@string/fragment_userinput"
+        tools:layout="@layout/fragment_userinput" >
+        <action
+            android:id="@+id/action_userinput_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/magicBall"
+        android:name="com.example.indecisive.magicBall"
+        android:label="@string/fragment_magic_ball"
+        tools:layout="@layout/fragment_magic_ball" >
+        <action
+            android:id="@+id/action_magicBall_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/actualdiceroller"
+        android:name="com.example.indecisive.actualdiceroller"
+        android:label="@string/fragment_actualdiceroller"
+        tools:layout="@layout/fragment_actualdiceroller" >
+        <action
+            android:id="@+id/action_actualdiceroller_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
 </navigation>
