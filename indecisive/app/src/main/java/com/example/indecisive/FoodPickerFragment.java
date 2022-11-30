@@ -285,6 +285,8 @@ public class FoodPickerFragment extends Fragment {
                     stringList.add(googlePlacesUrl.toString());
                 }catch(IndexOutOfBoundsException e){
                     continue;
+                }catch(NullPointerException e){
+                    break;
                 }
             }
 

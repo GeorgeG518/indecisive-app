@@ -104,7 +104,7 @@ public class magicBall extends Fragment {
     }
     public void magic(){
         //binding.ballButton;
-        String answer = String.valueOf(binding.answerText.getText());
+        //String answer = String.valueOf(binding.answerText.getText());
         int rand = new Random().nextInt(answersArray.length);
         binding.displayText.setText(answersArray[rand]);
     }

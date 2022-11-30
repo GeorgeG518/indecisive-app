@@ -16,6 +16,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
         app:layout_constraintVertical_bias="0.945" />
 
     <TextView
@@ -28,11 +29,9 @@
         android:textColor="#000000"
         android:textSize="20dp"
         android:textStyle="bold|italic"
-        app:layout_constraintBottom_toTopOf="@+id/answerText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.112" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/displayText"
@@ -49,23 +48,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.311" />
-
-    <EditText
-        android:id="@+id/answerText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:ems="10"
-        android:gravity="start|top"
-        android:hint="Type question here"
-        android:inputType="textMultiLine"
-        android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title"
-        app:layout_constraintVertical_bias="0.105" />
 
     <ImageButton
         android:id="@+id/ballButton"
@@ -87,14 +69,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="CLICK THE BUTTON THAT SAYS YES OR NO"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-
         android:textSize="20dp"
         android:textStyle="bold"
+
         app:layout_constraintBottom_toTopOf="@+id/ballButton"
-        app:layout_constraintTop_toBottomOf="@+id/answerText"
-        app:layout_constraintVertical_bias="0.564"
-        tools:layout_editor_absoluteX="68dp" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
