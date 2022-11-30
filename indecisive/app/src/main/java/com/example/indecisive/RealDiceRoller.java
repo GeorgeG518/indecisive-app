@@ -1,5 +1,10 @@
 package com.example.indecisive;
-
+/*
+    Gwyneth Polak
+    RealDiceRoller.java
+    Java code that controls the dice rolling fragment. Takes in user input and
+    displays results of the rolls to the UI.
+ */
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
