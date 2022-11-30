@@ -1,6 +1,7 @@
 # indecisive-app
 # Requirements
 1. Android Studio, version greater than > Chipmunk (2021.2.1)
+2. Google API Key (not provided)
 
 # Build and Install Directions
 If you are on windows, download git for windows: https://gitforwindows.org/ If you are on Mac, you can skip this part. 
@@ -19,6 +20,9 @@ Before you go further: create/steal from another project a file called local.pro
 NOTE: sdk.dir will be unique. Replace Owner with your username if you’re on windows. 
 I’m afraid idk where it is on Mac, but you can make an android studio project and then look at where its local properties is: 
 sdk.dir=C\:\\Users\\Owner\\AppData\\Local\\Android\\Sdk 
+you will also need to add a line that says: MAPS_API_KEY=*INSERT YOUR KEY HERE*
+Note: Everything in the app except the food picker will work without the key, but this line has to be in the local.properties regardless or else it won't build.
+If you don't have a key, just put in a random string of letters.
 
 Once you have your local.properties file created, put it in the indecisive-app/indecisive folder. You may need another in the app folder below that. 
 
